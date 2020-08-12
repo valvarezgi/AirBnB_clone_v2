@@ -135,14 +135,13 @@ class HBNBCommand(cmd.Cmd):
                         value = int(value)
                     dicto[key] = value
             objecto = HBNBCommand.classes[args_list[0]]()
-            for key,value in dicto.items():
+            for key, value in dicto.items():
                 if hasattr(objecto, key):
                     setattr(objecto, key, value)
-            storage.save()
+            objecto.save()
             print("{}".format(objecto.id))
         else:
             print("** class doesn't exist **")
-
 
     def help_create(self):
         """ Help information for the create method """
