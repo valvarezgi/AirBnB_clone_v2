@@ -58,7 +58,7 @@ class DBStorage:
     def delete(self, obj=None):
         """deletes objects from the database"""
         if obj is not None:
-            self.__session.__delete(obj)
+            self.__session.delete(obj)
 
     def reload(self):
         """creates all databases and a new session in SQLAlchemy"""
