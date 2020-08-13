@@ -14,6 +14,7 @@ from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
+
 class DBStorage:
     """Data Base Storage"""
     __engine = None
@@ -31,7 +32,7 @@ class DBStorage:
 
         if getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(self.__engine)
-    
+
     def all(self, cls=None):
         """Shows all the objects"""
         object_dict = {}
@@ -39,13 +40,13 @@ class DBStorage:
             for obj in self.__session.query((cls).all()):
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 object_dict[key] = obj
-        else: 
+        else:
             for subclass in Base.__subclasses__():
                 for obj in self.__session.query(subclass).all():
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     object_dict[key] = obj
         return object_dict
-    
+
     def new(self, obj):
         """adds the object to the database"""
         self.__session.add(obj)
@@ -62,9 +63,10 @@ class DBStorage:
     def reload(self):
         """creates all databases and a new session in SQLAlchemy"""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         self.__session = scoped_session(session_factory)
-    
+
     def close(self):
         """Clses the session"""
         self.__session.remove()

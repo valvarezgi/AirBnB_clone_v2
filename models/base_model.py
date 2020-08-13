@@ -5,7 +5,7 @@ import models
 from models import storage
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.ext.declarative import declarative_base 
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -18,16 +18,18 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
-        if kwargs is not None and len(kwargs) !=0:
+        if kwargs is not None and len(kwargs) != 0:
             for key, value in kwargs.items():
                 if key == "__class__":
                     pass
                 elif key == "created_at":
-                    self.created_at = (datetime.strptime((kwargs["created_at"]),
-                                                         '%Y-%m-%dT%H:%M:%S.%f'))
+                    self.created_at = (datetime.strptime(
+                                       (kwargs["created_at"]),
+                                       '%Y-%m-%dT%H:%M:%S.%f'))
                 elif key == "updated_at":
-                    self.updated_at = (datetime.strptime((kwargs["updated_at"]),
-                                                         '%Y-%m-%dT%H:%M:%S.%f'))
+                    self.updated_at = (datetime.strptime(
+                                       (kwargs["updated_at"]),
+                                       '%Y-%m-%dT%H:%M:%S.%f'))
                 else:
                     setattr(self, key, value)
         else:
