@@ -2,6 +2,8 @@
 """ Console Module """
 import cmd
 import sys
+import models
+from models import storage
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -10,6 +12,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from models.engine.file_storage import FileStorage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -115,16 +118,33 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        args_list = args.split()
+        dicto = {}
+        if len(args) == 0:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        if args_list[0] in HBNBCommand.classes:
+            for arg in args_list:
+                if "=" in arg:
+                    key = arg.split("=")[0]
+                    value = arg.split("=")[1]
+                    if '\"' in value:
+                        value = value[1:-1]
+                        if '_' in value:
+                            value = value.replace('_', ' ')
+                    elif "." in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                    dicto[key] = value
+            objecto = HBNBCommand.classes[args_list[0]]()
+            for key, value in dicto.items():
+                if hasattr(objecto, key):
+                    setattr(objecto, key, value)
+            objecto.save()
+            print("{}".format(objecto.id))
+        else:
             print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -199,21 +219,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        if len(args) == 0:
+            print([str(value) for value in storage.all().values()])
+        elif args not in self.classes:
+            print("** class doesn't exist **")
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            print([str(value) for key, value in models.storage.all().items() if args in key])
 
-        print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
