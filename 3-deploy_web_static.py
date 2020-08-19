@@ -1,53 +1,51 @@
 #!/usr/bin/python3
-"""Distributes an archive to the web servers"""
+"""Auto deploys"""
+
+
+import os
+from fabric.operations import local, run, put, env
 from datetime import datetime
-from fabric.api import env, local, put, run
-from os.path import exists
+
 
 env.hosts = ['34.75.76.240', '35.229.102.53']
 
 
 def do_pack():
-    """"Makes a pack of directory on local"""
-
-    local('mkdir -p versions')
-    date = datetime.now().strftime("%Y%m%d%H%M%S")
-    final = 'versions/web_static_{}.tgz'.format(date)
-
+    """C0mpress"""
+    filename = 'web_static_' + datetime.now().strftime('%Y%m%d%H%M%S') + '.tgz'
     try:
-        local('tar -czvf {} web_static'.format(final))
-        return final
-    except:
+        if not os.path.isdir('versions'):
+            local('mkdir versions')
+
+        return local('tar -cvzf versions/{} web_static'.format(filename))
+    except Exception:
         return None
 
 
 def do_deploy(archive_path):
-    """Distributes files to web servers"""
-    if not exists(archive_path):
+    """Deplys"""
+
+    if not os.path.exists(archive_path):
         return False
-    try:
-        put(archive_path, '/tmp/')
-        base = archive_path.split('/')[-1]
-        extent = base.split('.')[0]
-        release = '/data/web_static/releases/'
-        curren = '/data/web_static/current'
-        run('mkdir -p {}{}/'.format(release, extent))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(base, release, extent))
-        run('rm /tmp/{}'.format(base))
-        run('mv{1}{0}/web_static/*{1}{0}/'.format(extent, release))
-        run('rm -rf {}{}/web_static'.format(release, extent))
-        run('rm -rf {}'.format(curren))
-        run('ln -fs {}{}/ {}'.format(release, extent, curren))
-        return True
-    except:
-        return False
+
+    name = archive_path.split('/')[-1]
+
+    untar = "/data/web_static/releases/{}".format(name.replace('.tgz', ''))
+
+    put(archive_path, '/tmp')
+    run('mkdir -p ' + untar)
+    run('tar -xzf /tmp/{} -C {}'.format(name, untar))
+    run('rm /tmp/{}'.format(name))
+    run("mv {}/web_static/* {}".format(untar, untar))
+    run("rm -rf {}/web_static".format(untar))
+    run("rm -rf /data/web_static/current")
+    run("ln -s {} /data/web_static/current".format(untar))
+    return True
 
 
 def deploy():
-    """Creates a file an distribute it"""
-    archive = do_pack
-    if not archive:
+    """Call deploy"""
+    p = do_pack()
+    if not p:
         return False
-    else:
-        new = do_deploy(archive)
-        return new
+    return do_deploy(p)
