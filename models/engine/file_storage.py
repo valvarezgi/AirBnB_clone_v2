@@ -65,3 +65,7 @@ class FileStorage:
                 self.save()
             except:
                 pass
+
+    def close(self):
+        """Deserealize a JSON file to objects"""
+        self.reload()

@@ -37,7 +37,7 @@ class DBStorage:
         """Shows all the objects"""
         object_dict = {}
         if cls:
-            for obj in self.__session.query((cls).all()):
+            for obj in self.__session.query(cls).all():
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 object_dict[key] = obj
         else:
@@ -69,4 +69,4 @@ class DBStorage:
 
     def close(self):
         """Clses the session"""
-        self.__session.remove()
+        self.__session.close()
