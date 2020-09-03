@@ -1,0 +1,91 @@
+.places {
+    margin-bottom: 6rem;
+}
+
+.places h1 {
+    font-size: 3rem;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.house{
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.house article {
+    border: 0.1rem solid #FF5A5F;
+    border-radius: 0.4rem;
+    display: inline-block;
+    margin: 2rem;
+    padding: 2rem;
+    position: relative;
+    width: 46rem;
+}
+
+.house h2 {
+    font-size: 3rem;
+    margin: auto 0;
+    text-align: center;
+    width: 80%;
+} 
+
+.house .price {
+    border: 0.4rem solid #FF5A5F;
+    border-radius: 50%;
+    color: #FF5A5F;
+    display: flex;
+    font-size: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    height: 6rem;
+    min-width: 6rem;
+    top: 5%;
+    position: absolute;
+    right: 5%;
+}
+
+.house .information {
+    border-bottom: 0.1rem solid #DDD;
+    border-top: 0.1rem solid #DDD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+}
+
+.guests,
+.rooms,
+.bathrooms {
+    text-align: center;
+    width: 10rem;
+}
+
+.group {
+    background-image: url('../images/icon_group.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 5rem;
+}
+
+.bed {
+    background-image: url('../images/icon_bed.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 5rem;
+}
+
+.three {
+    background-image: url('../images/icon_bath.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 5rem;
+}
+
+.user {
+    text-align: initial;
+    padding: 1rem 0;
+}
